@@ -1,17 +1,27 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './pages/*.js',
-    './components/**/*.js'
+    "./pages/**/*.{js,jsx}",
+    "./components/**/*.{js,jsx}",
+    "./node_modules/flowbite-react/**/*.js",
+    "./node_modules/flowbite/**/*.js"
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+      typography: {
+        DEFAULT: {
+          css: {
+            color: '#fff',
+          },
+        },
       },
     },
+    fontFamily: {
+     Interphase: ['Interphase', 'sans-serif'],
+    },
   },
-  plugins: [],
+  plugins: [
+    require('flowbite/plugin'),
+    require('flowbite-typography'),
+  ],
 }

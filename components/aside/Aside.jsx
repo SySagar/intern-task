@@ -1,11 +1,10 @@
 import { useEffect } from "react";
 import { APIMethods } from "@/lib/axios/api";
-import useWeatherInfo from "@/lib/zustand/useWeatherInfo";
+import useWeatherInfo from "@/lib/hooks/useWeatherInfo";
 import Image from "next/image";
 import { useState } from "react";
 import Forecast from "./Forecast";
-import getClimateIcon from "@/lib/utils/climateIcon";
-import useLocationSearch from "@/lib/zustand/useLocationSearch";
+import useLocationSearch from "@/lib/hooks/useLocationSearch";
 
 export default function Aside() {
   const [searchItem , setSearchItem] = useLocationSearch((state) => [state.searchItem, state.setSearchItem]);
@@ -53,15 +52,25 @@ export default function Aside() {
       return await APIMethods.weather.getWeather(searchItem);
     };
 
-    getWeatherDetails().then((res) => {
-      setCurrentTemp(res.data.main.temp);
-      setWindSpeed(res.data.wind.speed);
-      setWeatherDescription(res.data.weather[0].description);
-      setWeatherIcon(res.data.weather[0].icon);
-      setHumidity(res.data.main.humidity);
-      setPressure(res.data.main.pressure);
-      setLocation(res.data.coord.lat, res.data.coord.lon);
-    });
+    try {
+      getWeatherDetails().then((res) => {
+
+        if(res){
+
+          setCurrentTemp(res.data.main.temp);
+          setWindSpeed(res.data.wind.speed);
+          setWeatherDescription(res.data.weather[0].description);
+          setWeatherIcon(res.data.weather[0].icon);
+          setHumidity(res.data.main.humidity);
+          setPressure(res.data.main.pressure);
+          setLocation(res.data.coord.lat, res.data.coord.lon);
+        }
+      });
+      
+    } catch (error) {
+      console.log(error);
+    }
+
 
   }, [searchItem]);
 
@@ -70,7 +79,7 @@ export default function Aside() {
   };
 
   return (
-    <div className="h-full w-full bg-gray-100 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 p-9">
+    <div className="h-full w-full bg-black bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-40 p-9">
       <form class="flex items-center">
         <label for="simple-search" class="sr-only">
           Search
@@ -109,7 +118,7 @@ export default function Aside() {
       </form>
 
       <div className="justify-center items-center text-center py-6">
-        <p style={{ fontSize: "60px" }}>{currentTemp}°C</p>
+        <p className="text-white" style={{ fontSize: "60px" }}>{currentTemp}°C</p>
         <div className="flex flex-row gap-2 text-gray-300 justify-center items-center text-center">
           <Image src={`assets/svg/${weatherIcon}.svg`} width={20} height={20} alt="" />
           <p style={{ fontSize: "16px" }}>{weatherDescription}, {windSpeed}km/h</p>

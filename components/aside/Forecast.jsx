@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { APIMethods } from "@/lib/axios/api";
 import getClimateIcon from "@/lib/utils/climateIcon";
-import useLocationSearch from "@/lib/zustand/useLocationSearch";
+import useLocationSearch from "@/lib/hooks/useLocationSearch";
 
 export default function Forecast({ days }) {
   const [weatherForecast, setWeatherForecast] = useState([]);

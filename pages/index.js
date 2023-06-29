@@ -2,10 +2,30 @@ import Aside from "@/components/aside/Aside";
 import "tailwindcss/tailwind.css";
 import Image from "next/image";
 import moment from "moment";
+import useWeatherInfo from "@/lib/hooks/useWeatherInfo";
+import { useEffect, useState } from "react";
+import getClimateIcon from "@/lib/utils/climateIcon";
+import { Toaster } from "react-hot-toast";
 
 export default function Home() {
+
+  const [background, setBackground] = useState("");
+  const [backgroundCover, setBackgroundCover] = useState("");
+      
+  const [weatherIcon] = useWeatherInfo((state)=>[
+    state.weatherIcon
+  ]);
+  useEffect(() => {
+  const climate = getClimateIcon(weatherIcon);
+  console.log(climate);
+  setBackground(climate.background);
+  setBackgroundCover(climate.backgroundCover);
+
+  }, [weatherIcon]);
+
   return (
       <div className="home min-h-screen w-full bg-slate-700 font-Interphase">
+        <Toaster position="top-center"></Toaster>
         <div className="aside-container flex flex-row absolute right-0 min-w-[23rem] h-full z-10">
           <p
             style={{ fontSize: "20px" }}
@@ -28,11 +48,11 @@ export default function Home() {
           <Image
             fill={true}
             loading="lazy"
-            src="/assets/jpg/rain.jpg"
+            src={background}
             style={{
               objectFit: "cover",
               objectPosition: "center",
-              backgroundImage: "url('/assets/jpg/rain-small.jpg')",
+              backgroundImage: `url('${backgroundCover}')`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
